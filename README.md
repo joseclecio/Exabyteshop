@@ -31,7 +31,7 @@ Visto a crescente demanda de vendas de artigos tecnológicos na pandemia, esse s
 ![DER DO SISTEMA](https://firebasestorage.googleapis.com/v0/b/lojavirtual-c6a7d.appspot.com/o/DER2.0.PNG?alt=media&token=8d008b07-d88c-46de-97ab-375f0db47926)
 
 - Tabela "Usuario":
-  - Contém dados básicos genéricos de usuário como ("UsuarioId", "CPF", "Idade", "Nome", "Cep", "Endereco", "EnderecoComplemento" e "Celular".
+  - Contém dados básicos genéricos de usuário como ("CPF", "Idade", "Nome", "Cep", "Endereco", "EnderecoComplemento" e "Celular".
   - Coluna "Estado": Consta o estado em que a conta do usuário se encontra. Ex: Inativa.
   - Coluna "Tipo": Diferencia o usuário do administrador.
 - Tabela "Produto":
