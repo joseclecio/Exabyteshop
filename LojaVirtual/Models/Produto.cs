@@ -11,7 +11,7 @@ namespace LojaVirtual.Models
     public class Produto : Notifies
     {
         [Display(Name = "Código")]
-        public int ProdutoID { get; set; }
+        public string ProdutoID { get; set; }
 
         [Display(Name = "Nome")]
         [MaxLength(255)]
@@ -34,7 +34,7 @@ namespace LojaVirtual.Models
         [Display(Name = "Usuario")]
         [ForeignKey("Usuario")]
         [Column(Order = 1)]
-        public string UsuarioID { get; set; }
+        public string Id { get; set; }
         public virtual Usuario Usuario { get; set; }
 
 

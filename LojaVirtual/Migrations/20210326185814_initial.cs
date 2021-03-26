@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LojaVirtual.Migrations
 {
-    public partial class initialcreate : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,6 @@ namespace LojaVirtual.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    UsuarioID = table.Column<int>(nullable: false),
                     CPF = table.Column<string>(maxLength: 50, nullable: true),
                     Idade = table.Column<int>(nullable: false),
                     Nome = table.Column<string>(maxLength: 255, nullable: true),
@@ -166,53 +165,51 @@ namespace LojaVirtual.Migrations
                 name: "Produto",
                 columns: table => new
                 {
-                    ProdutoID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(nullable: false),
+                    ProdutoID = table.Column<string>(nullable: true),
                     Nome = table.Column<string>(maxLength: 255, nullable: true),
                     Descricao = table.Column<string>(maxLength: 150, nullable: true),
                     Observacao = table.Column<string>(maxLength: 20000, nullable: true),
                     Valor = table.Column<decimal>(nullable: false),
                     QuantidadeEstoque = table.Column<int>(nullable: false),
-                    UsuarioID = table.Column<string>(nullable: true),
                     Estado = table.Column<bool>(nullable: false),
                     DataCadastro = table.Column<DateTime>(nullable: false),
                     DataAlteracao = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Produto", x => x.ProdutoID);
+                    table.PrimaryKey("PK_Produto", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Produto_AspNetUsers_UsuarioID",
-                        column: x => x.UsuarioID,
+                        name: "FK_Produto_AspNetUsers_Id",
+                        column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "CompraUsuario",
                 columns: table => new
                 {
-                    CompraUsuarioID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProdutoID = table.Column<int>(nullable: false),
+                    Id = table.Column<string>(nullable: false),
+                    CompraUsuarioID = table.Column<string>(nullable: true),
+                    ProdutoID = table.Column<string>(nullable: true),
                     EnumEstadoCompra = table.Column<int>(nullable: false),
-                    Quantidade = table.Column<int>(nullable: false),
-                    UsuarioID = table.Column<string>(nullable: true)
+                    Quantidade = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompraUsuario", x => x.CompraUsuarioID);
+                    table.PrimaryKey("PK_CompraUsuario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompraUsuario_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CompraUsuario_Produto_ProdutoID",
                         column: x => x.ProdutoID,
                         principalTable: "Produto",
-                        principalColumn: "ProdutoID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CompraUsuario_AspNetUsers_UsuarioID",
-                        column: x => x.UsuarioID,
-                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -260,16 +257,6 @@ namespace LojaVirtual.Migrations
                 name: "IX_CompraUsuario_ProdutoID",
                 table: "CompraUsuario",
                 column: "ProdutoID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CompraUsuario_UsuarioID",
-                table: "CompraUsuario",
-                column: "UsuarioID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Produto_UsuarioID",
-                table: "Produto",
-                column: "UsuarioID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

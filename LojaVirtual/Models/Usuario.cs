@@ -11,10 +11,6 @@ namespace LojaVirtual.Models
 {
     public class Usuario : IdentityUser
     {
-
-        [Display(Name = "Código")]
-        public int UsuarioID { get; set; }
-
         [MaxLength(50)]
         [Display(Name = "CPF")]
         public string CPF { get; set; }

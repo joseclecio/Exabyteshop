@@ -36,7 +36,7 @@ namespace LojaVirtual.Repository.Repositories
         {
             using (var banco = new ContextBase(_optionsbuilder))
             {
-                return await banco.Produto.Where(p => p.UsuarioID == userId).AsNoTracking().ToListAsync();
+                return await banco.Produto.Where(p => p.Id == userId).AsNoTracking().ToListAsync();
             }
         }
     }

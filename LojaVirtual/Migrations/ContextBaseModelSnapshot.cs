@@ -21,38 +21,32 @@ namespace LojaVirtual.Migrations
 
             modelBuilder.Entity("LojaVirtual.Models.CompraUsuario", b =>
                 {
-                    b.Property<int>("CompraUsuarioID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CompraUsuarioID")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("EnumEstadoCompra")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProdutoID")
-                        .HasColumnType("int");
+                    b.Property<string>("ProdutoID")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsuarioID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("CompraUsuarioID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProdutoID");
-
-                    b.HasIndex("UsuarioID");
 
                     b.ToTable("CompraUsuario");
                 });
 
             modelBuilder.Entity("LojaVirtual.Models.Produto", b =>
                 {
-                    b.Property<int>("ProdutoID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("DataAlteracao")
                         .HasColumnType("datetime2");
@@ -75,18 +69,16 @@ namespace LojaVirtual.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(20000);
 
+                    b.Property<string>("ProdutoID")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("QuantidadeEstoque")
                         .HasColumnType("int");
-
-                    b.Property<string>("UsuarioID")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("ProdutoID");
-
-                    b.HasIndex("UsuarioID");
+                    b.HasKey("Id");
 
                     b.ToTable("Produto");
                 });
@@ -176,9 +168,6 @@ namespace LojaVirtual.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
-
-                    b.Property<int>("UsuarioID")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -330,22 +319,24 @@ namespace LojaVirtual.Migrations
 
             modelBuilder.Entity("LojaVirtual.Models.CompraUsuario", b =>
                 {
-                    b.HasOne("LojaVirtual.Models.Produto", "Produto")
+                    b.HasOne("LojaVirtual.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("ProdutoID")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LojaVirtual.Models.Usuario", "Usuario")
+                    b.HasOne("LojaVirtual.Models.Produto", "Produto")
                         .WithMany()
-                        .HasForeignKey("UsuarioID");
+                        .HasForeignKey("ProdutoID");
                 });
 
             modelBuilder.Entity("LojaVirtual.Models.Produto", b =>
                 {
                     b.HasOne("LojaVirtual.Models.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("UsuarioID");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
