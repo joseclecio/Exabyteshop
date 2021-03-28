@@ -65,7 +65,7 @@ namespace LojaVirtual.Controllers
             {
                 var idUsuario = await RetornarIdUsuarioLogado();
 
-                produto.Id = idUsuario;
+                produto.ProdutoId = Convert.ToInt32(idUsuario);
 
                 await _InterfaceProductApp.AddProduct(produto);
                 if (produto.Notitycoes.Any())
@@ -205,7 +205,7 @@ namespace LojaVirtual.Controllers
         {
             try
             {
-                var produto = await _InterfaceProductApp.GetEntityById(produtoTela.Id);
+                var produto = await _InterfaceProductApp.GetEntityById(produtoTela.ProdutoId);
 
                 if (produtoTela.Imagem != null)
                 {
@@ -216,7 +216,7 @@ namespace LojaVirtual.Controllers
 
                     var Extension = System.IO.Path.GetExtension(produtoTela.Imagem.FileName);
 
-                    var NomeArquivo = string.Concat(produto.Id.ToString(), Extension);
+                    var NomeArquivo = string.Concat(produto.ProdutoId.ToString(), Extension);
 
                     var diretorioArquivoSalvar = string.Concat(webRoot, "\\imgProdutos\\", NomeArquivo);
 
