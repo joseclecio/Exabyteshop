@@ -65,7 +65,7 @@ namespace LojaVirtual.Controllers
             {
                 var idUsuario = await RetornarIdUsuarioLogado();
 
-                produto.UsuarioID = idUsuario;
+                produto.Id = idUsuario;
 
                 await _InterfaceProductApp.AddProduct(produto);
                 if (produto.Notitycoes.Any())

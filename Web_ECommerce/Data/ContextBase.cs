@@ -28,6 +28,7 @@ namespace Infrastructure.Configuration
             }
         }
 
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Usuario>().ToTable("AspNetUsers").HasKey(t => t.Id);
