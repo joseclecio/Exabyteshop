@@ -28,6 +28,7 @@ namespace LojaVirtual.Configuration
             }
         }
 
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Usuario>().ToTable("UsuarioID").HasKey(t => t.Id);
