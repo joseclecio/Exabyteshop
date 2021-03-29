@@ -15,15 +15,15 @@ Visto a crescente demanda de vendas de artigos tecnológicos na pandemia, esse s
 
 ## FUNCIONALIDADES
 
-- [ ] Telas de Cadastro e manutenção de usuários 
-- [ ] Telas de Cadastro e manutenção de produtos
+- [x] Telas de Cadastro e manutenção de usuários 
+- [x] Telas de Cadastro e manutenção de produtos
 - [ ] Controle de estoque
   - [ ] Listar produtos com o Estoque
 - [ ] Controle de vendas
-- [ ] Funcionalidade para adicionar produtos no carrinho
-- [ ] Gerenciar Carrinho de compras
-- [ ] Telas de finalização de compra
-- [ ] Formas de pagamentos (Nessa fase o módulo pode não ser completo)
+- [x] Funcionalidade para adicionar produtos no carrinho
+- [x] Gerenciar Carrinho de compras
+- [x] Telas de finalização de compra
+- [x] Formas de pagamentos (QR Code)
 
 
 ### DER DO SISTEMA
