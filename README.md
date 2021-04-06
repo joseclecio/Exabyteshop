@@ -28,7 +28,7 @@ Visto a crescente demanda de vendas de artigos tecnológicos na pandemia, esse s
 
 ### DER DO SISTEMA
 
-![DER DO SISTEMA](https://firebasestorage.googleapis.com/v0/b/lojavirtual-c6a7d.appspot.com/o/DER.PNG?alt=media&token=7382fc90-ff34-4e7e-8a7a-2aaa465decc1)
+![DER DO SISTEMA](https://firebasestorage.googleapis.com/v0/b/testeslab-c72db.appspot.com/o/images%2FCapturar.JPG?alt=media&token=1dd6b619-5eb2-4b1f-ad85-0b647c227e4d)
 
 - Tabela "Usuario":
   - Contém dados básicos genéricos de usuário como ("CPF", "Idade", "Nome", "Cep", "Endereco", "EnderecoComplemento" e "Celular".
