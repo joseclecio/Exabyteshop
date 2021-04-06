@@ -85,10 +85,10 @@ namespace LojaVirtual.Controllers
             {
                 await _InterfaceCompraUsuarioApp.Add(new CompraUsuario
                 {
-                    ProdutoID = Convert.ToInt32(id),
+                    ProdutoId = Convert.ToInt32(id),
                     Quantidade = Convert.ToInt32(qtd),
                     EnumEstadoCompra = EnumEstadoCompra.Produto_Carrinho,
-                    UsuarioID = usuario.Id
+                    Id = usuario.Id
                 });
                 return Json(new { sucesso = true });
             }

@@ -15,20 +15,20 @@ Visto a crescente demanda de vendas de artigos tecnológicos na pandemia, esse s
 
 ## FUNCIONALIDADES
 
-- [ ] Telas de Cadastro e manutenção de usuários 
-- [ ] Telas de Cadastro e manutenção de produtos
+- [x] Telas de Cadastro e manutenção de usuários 
+- [x] Telas de Cadastro e manutenção de produtos
 - [ ] Controle de estoque
   - [ ] Listar produtos com o Estoque
 - [ ] Controle de vendas
-- [ ] Funcionalidade para adicionar produtos no carrinho
-- [ ] Gerenciar Carrinho de compras
-- [ ] Telas de finalização de compra
-- [ ] Formas de pagamentos (Nessa fase o módulo pode não ser completo)
+- [x] Funcionalidade para adicionar produtos no carrinho
+- [x] Gerenciar Carrinho de compras
+- [x] Telas de finalização de compra
+- [x] Formas de pagamentos (Nessa fase o módulo pode não ser completo)
 
 
 ### DER DO SISTEMA
 
-![DER DO SISTEMA](https://firebasestorage.googleapis.com/v0/b/lojavirtual-c6a7d.appspot.com/o/DER2.0.PNG?alt=media&token=8d008b07-d88c-46de-97ab-375f0db47926)
+![DER DO SISTEMA](https://firebasestorage.googleapis.com/v0/b/lojavirtual-c6a7d.appspot.com/o/DER.PNG?alt=media&token=7382fc90-ff34-4e7e-8a7a-2aaa465decc1)
 
 - Tabela "Usuario":
   - Contém dados básicos genéricos de usuário como ("CPF", "Idade", "Nome", "Cep", "Endereco", "EnderecoComplemento" e "Celular".

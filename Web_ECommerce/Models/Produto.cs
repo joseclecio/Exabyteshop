@@ -12,7 +12,7 @@ namespace Entities.Entities
     public class Produto : Notifies
     {
         [Display(Name = "Código")]
-        public int Id { get; set; }
+        public int ProdutoId { get; set; }
 
         [Display(Name = "Nome")]
         [MaxLength(255)]
@@ -35,7 +35,7 @@ namespace Entities.Entities
         [Display(Name = "Usuário")]
         [ForeignKey("Usuario")]
         [Column(Order = 1)]
-        public string UsuarioID { get; set; }
+        public string Id { get; set; }
         public virtual Usuario Usuario { get; set; }
 
 

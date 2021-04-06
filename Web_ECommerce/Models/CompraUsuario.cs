@@ -12,12 +12,12 @@ namespace Entities.Entities
     public class CompraUsuario : Notifies
     {
         [Display(Name = "Código")]
-        public string CompraUsuarioID { get; set; }
+        public int CompraUsuarioId { get; set; }
 
         [Display(Name = "Produto")]
         [ForeignKey("Produto")]
         [Column(Order = 1)]
-        public string ProdutoID { get; set; }
+        public int ProdutoId { get; set; }
         public virtual Produto Produto { get; set; }
 
         [Display(Name = "EnumEstadoCompra")]

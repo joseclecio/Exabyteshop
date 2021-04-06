@@ -10,13 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LojaVirtual.Migrations
 {
     [DbContext(typeof(ContextBase))]
-<<<<<<< HEAD:Web_ECommerce/Migrations/20210328023818_initialcreate.Designer.cs
     [Migration("20210328023818_initialcreate")]
     partial class initialcreate
-=======
-    [Migration("20210326185814_initial")]
-    partial class initial
->>>>>>> master:Web_ECommerce/Migrations/20210326185814_initial.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -28,39 +23,38 @@ namespace LojaVirtual.Migrations
 
             modelBuilder.Entity("Entities.Entities.CompraUsuario", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CompraUsuarioID")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CompraUsuarioID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("EnumEstadoCompra")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProdutoID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ProdutoID")
+                        .HasColumnType("int");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UsuarioID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("CompraUsuarioID");
 
                     b.HasIndex("ProdutoID");
+
+                    b.HasIndex("UsuarioID");
 
                     b.ToTable("CompraUsuario");
                 });
 
             modelBuilder.Entity("Entities.Entities.Produto", b =>
                 {
-<<<<<<< HEAD:Web_ECommerce/Migrations/20210328023818_initialcreate.Designer.cs
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-=======
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
->>>>>>> master:Web_ECommerce/Migrations/20210326185814_initial.Designer.cs
 
                     b.Property<DateTime>("DataAlteracao")
                         .HasColumnType("datetime2");
@@ -83,30 +77,21 @@ namespace LojaVirtual.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasMaxLength(20000);
 
-                    b.Property<string>("ProdutoID")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("QuantidadeEstoque")
                         .HasColumnType("int");
 
-<<<<<<< HEAD:Web_ECommerce/Migrations/20210328023818_initialcreate.Designer.cs
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UsuarioID")
                         .HasColumnType("nvarchar(450)");
 
-=======
->>>>>>> master:Web_ECommerce/Migrations/20210326185814_initial.Designer.cs
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-<<<<<<< HEAD:Web_ECommerce/Migrations/20210328023818_initialcreate.Designer.cs
 
                     b.HasIndex("UsuarioID");
-=======
->>>>>>> master:Web_ECommerce/Migrations/20210326185814_initial.Designer.cs
 
                     b.ToTable("Produto");
                 });
@@ -350,32 +335,22 @@ namespace LojaVirtual.Migrations
 
             modelBuilder.Entity("Entities.Entities.CompraUsuario", b =>
                 {
-<<<<<<< HEAD:Web_ECommerce/Migrations/20210328023818_initialcreate.Designer.cs
                     b.HasOne("Entities.Entities.Produto", "Produto")
-=======
-                    b.HasOne("LojaVirtual.Models.Usuario", "Usuario")
->>>>>>> master:Web_ECommerce/Migrations/20210326185814_initial.Designer.cs
                         .WithMany()
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ProdutoID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-<<<<<<< HEAD:Web_ECommerce/Migrations/20210328023818_initialcreate.Designer.cs
                     b.HasOne("Entities.Entities.Usuario", "Usuario")
-=======
-                    b.HasOne("LojaVirtual.Models.Produto", "Produto")
->>>>>>> master:Web_ECommerce/Migrations/20210326185814_initial.Designer.cs
                         .WithMany()
-                        .HasForeignKey("ProdutoID");
+                        .HasForeignKey("UsuarioID");
                 });
 
             modelBuilder.Entity("Entities.Entities.Produto", b =>
                 {
                     b.HasOne("Entities.Entities.Usuario", "Usuario")
                         .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UsuarioID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
