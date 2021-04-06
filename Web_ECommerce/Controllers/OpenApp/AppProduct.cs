@@ -46,6 +46,11 @@ namespace ApplicationApp.OpenApp
             return await _IProduct.ListarProdutosUsuario(userId);
         }
 
+        public async Task<List<Produto>> ListarProdutosVendidos(string userId, string filtro)
+        {
+            return await _IProduct.ListarProdutosVendidos(userId, filtro);
+        }
+
 
         public async Task Add(Produto Objeto)
         {
@@ -70,11 +75,11 @@ namespace ApplicationApp.OpenApp
             await _IProduct.Update(Objeto);
         }
 
-        public async Task<List<Produto>> ListarProdutosComEstoque()
+        public async Task<List<Produto>> ListarProdutosComEstoque(string descricao)
         {
-            return await _IServiceProduct.ListarProdutosComEstoque();
+            return await _IServiceProduct.ListarProdutosComEstoque(descricao);
         }
 
-
+       
     }
 }

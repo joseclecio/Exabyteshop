@@ -1,6 +1,6 @@
 using System;
 
-namespace LojaVirtual.Models
+namespace Exabyteshop.Models
 {
     public class ErrorViewModel
     {

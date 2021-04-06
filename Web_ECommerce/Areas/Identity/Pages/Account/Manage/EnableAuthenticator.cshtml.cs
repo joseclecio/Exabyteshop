@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace LojaVirtual.Areas.Identity.Pages.Account.Manage
+namespace Exabyteshop.Areas.Identity.Pages.Account.Manage
 {
     public class EnableAuthenticatorModel : PageModel
     {
@@ -96,7 +96,7 @@ namespace LojaVirtual.Areas.Identity.Pages.Account.Manage
 
             await _userManager.SetTwoFactorEnabledAsync(user, true);
             var userId = await _userManager.GetUserIdAsync(user);
-            _logger.LogInformation("User with ID '{UsuarioID}' has enabled 2FA with an authenticator app.", userId);
+            _logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
             StatusMessage = "Your authenticator app has been verified.";
 
@@ -149,7 +149,7 @@ namespace LojaVirtual.Areas.Identity.Pages.Account.Manage
         {
             return string.Format(
                 AuthenticatorUriFormat,
-                _urlEncoder.Encode("LojaVirtual"),
+                _urlEncoder.Encode("Exabyteshop"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

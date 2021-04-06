@@ -7,20 +7,21 @@ using System.Security.Permissions;
 using System.Threading.Tasks;
 using ApplicationApp.Interfaces;
 using Entities.Entities;
+using Entities.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
-namespace LojaVirtual.Controllers
+namespace Exabyteshop.Controllers
 {
 
     [Authorize]
-
-    public class ProdutosController : Controller
+    [LogActionFilter]
+    public class ProdutosController : BaseController
     {
-        public readonly UserManager<Usuario> _userManager;
 
         public readonly InterfaceProductApp _InterfaceProductApp;
 
@@ -28,10 +29,10 @@ namespace LojaVirtual.Controllers
 
         private IWebHostEnvironment _environment;
 
-        public ProdutosController(InterfaceProductApp InterfaceProductApp, UserManager<Usuario> userManager, InterfaceCompraUsuarioApp InterfaceCompraUsuarioApp, IWebHostEnvironment environment)
+        public ProdutosController(InterfaceProductApp InterfaceProductApp, UserManager<Usuario> userManager, InterfaceCompraUsuarioApp InterfaceCompraUsuarioApp, ILogger<ProdutosController> logger, InterfaceLogSistemaApp InterfaceLogSistemaApp, IWebHostEnvironment environment)
+            : base(logger, userManager, InterfaceLogSistemaApp)
         {
             _InterfaceProductApp = InterfaceProductApp;
-            _userManager = userManager;
             _InterfaceCompraUsuarioApp = InterfaceCompraUsuarioApp;
             _environment = environment;
         }
@@ -65,7 +66,7 @@ namespace LojaVirtual.Controllers
             {
                 var idUsuario = await RetornarIdUsuarioLogado();
 
-                produto.ProdutoId = Convert.ToInt32(idUsuario);
+                produto.UserId = idUsuario;
 
                 await _InterfaceProductApp.AddProduct(produto);
                 if (produto.Notitycoes.Any())
@@ -80,9 +81,13 @@ namespace LojaVirtual.Controllers
 
                 await SalvarImagemProduto(produto);
 
+                await LogEcommerce(EnumTipoLog.Informativo, produto);
+
             }
-            catch
+            catch (Exception erro)
             {
+                await LogEcommerce(EnumTipoLog.Erro, erro);
+
                 return View("Create", produto);
             }
 
@@ -114,14 +119,20 @@ namespace LojaVirtual.Controllers
                     ViewBag.Alerta = true;
                     ViewBag.Mensagem = "Verifique, ocorreu algum erro!";
 
+
                     return View("Edit", produto);
                 }
 
             }
-            catch
+            catch (Exception erro)
             {
+                await LogEcommerce(EnumTipoLog.Erro, erro);
+
                 return View("Edit", produto);
             }
+
+
+            await LogEcommerce(EnumTipoLog.Informativo, produto);
 
             return RedirectToAction(nameof(Index));
         }
@@ -143,26 +154,38 @@ namespace LojaVirtual.Controllers
 
                 await _InterfaceProductApp.Delete(produtoDeletar);
 
+                await LogEcommerce(EnumTipoLog.Informativo, produtoDeletar);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception erro)
             {
+                await LogEcommerce(EnumTipoLog.Erro, erro);
                 return View();
             }
         }
 
-        private async Task<string> RetornarIdUsuarioLogado()
-        {
-            var idUsuario = await _userManager.GetUserAsync(User);
 
-            return idUsuario.Id;
+        public async Task<IActionResult> DashboardVendas()
+        {
+            return View();
         }
+
+
+        [HttpGet("/api/ListarProdutosVendidos")]
+        public async Task<JsonResult> ListarProdutosVendidos(string filtro)
+        {
+            var idUsuario = await RetornarIdUsuarioLogado();
+
+            return Json(await _InterfaceProductApp.ListarProdutosVendidos(idUsuario, filtro));
+        }
+
 
         [AllowAnonymous]
         [HttpGet("/api/ListarProdutosComEstoque")]
-        public async Task<JsonResult> ListarProdutosComEstoque()
+        public async Task<JsonResult> ListarProdutosComEstoque(string descricao)
         {
-            return Json(await _InterfaceProductApp.ListarProdutosComEstoque());
+            return Json(await _InterfaceProductApp.ListarProdutosComEstoque(descricao));
         }
 
         public async Task<IActionResult> ListarProdutosCarrinhoUsuario()
@@ -171,8 +194,6 @@ namespace LojaVirtual.Controllers
             return View(await _InterfaceProductApp.ListarProdutosCarrinhoUsuario(idUsuario));
 
         }
-
-
 
         // GET: ProdutosController/Delete/5
         public async Task<IActionResult> RemoverCarrinho(int id)
@@ -193,19 +214,18 @@ namespace LojaVirtual.Controllers
 
                 return RedirectToAction(nameof(ListarProdutosCarrinhoUsuario));
             }
-            catch
+            catch (Exception erro)
             {
+                await LogEcommerce(EnumTipoLog.Erro, erro);
                 return View();
             }
         }
-
-
 
         public async Task SalvarImagemProduto(Produto produtoTela)
         {
             try
             {
-                var produto = await _InterfaceProductApp.GetEntityById(produtoTela.ProdutoId);
+                var produto = await _InterfaceProductApp.GetEntityById(produtoTela.Id);
 
                 if (produtoTela.Imagem != null)
                 {
@@ -216,7 +236,7 @@ namespace LojaVirtual.Controllers
 
                     var Extension = System.IO.Path.GetExtension(produtoTela.Imagem.FileName);
 
-                    var NomeArquivo = string.Concat(produto.ProdutoId.ToString(), Extension);
+                    var NomeArquivo = string.Concat(produto.Id.ToString(), Extension);
 
                     var diretorioArquivoSalvar = string.Concat(webRoot, "\\imgProdutos\\", NomeArquivo);
 
@@ -229,6 +249,7 @@ namespace LojaVirtual.Controllers
             }
             catch (Exception erro)
             {
+                await LogEcommerce(EnumTipoLog.Erro, erro);
             }
 
         }

@@ -1,5 +1,4 @@
 ﻿
-
 var ObjetoVenda = new Object();
 
 ObjetoVenda.AdicionarCarrinho = function (idProduto) {
@@ -33,8 +32,7 @@ ObjetoVenda.AdicionarCarrinho = function (idProduto) {
 
 }
 
-
-ObjetoVenda.CarregaProdutos = function () {
+ObjetoVenda.CarregaProdutos = function (descricao) {
 
     $.ajax({
         type: 'GET',
@@ -42,6 +40,8 @@ ObjetoVenda.CarregaProdutos = function () {
         dataType: "JSON",
         cache: false,
         async: true,
+        data: { descricao: descricao },
+
         success: function (data) {
 
             var htmlConteudo = "";
@@ -54,7 +54,7 @@ ObjetoVenda.CarregaProdutos = function () {
                 var idQtd = "qtd_" + Entitie.id;
 
                 htmlConteudo += "</br><label id='" + idNome + "' > Produto: " + Entitie.nome + "</label></br>";
-          
+
                 if (Entitie.url != null && Entitie.url != "" && Entitie.url != undefined) {
 
                     htmlConteudo += "<img width='200' height='100' src='" + Entitie.url + "'/></br>";
@@ -75,7 +75,6 @@ ObjetoVenda.CarregaProdutos = function () {
     });
 
 }
-
 
 ObjetoVenda.CarregaQtdCarrinho = function () {
 
@@ -100,7 +99,47 @@ ObjetoVenda.CarregaQtdCarrinho = function () {
     setTimeout(ObjetoVenda.CarregaQtdCarrinho, 10000);
 }
 
+function CarregarMenu() {
+    $.ajax({
+        type: 'GET',
+        url: "/api/ListarMenu",
+        dataType: "JSON",
+        cache: false,
+        async: true,
+
+        success: function (data) {
+
+            data.listaMenu.forEach(function (Entitie) {
+
+                var html = $("<li>", { class: "nav-item" });
+
+                if (Entitie.urlImagem != undefined && Entitie.urlImagem != "") {
+
+                    html.append("<a class='nav-link text-dark' href=/" + Entitie.controller + "/" + Entitie.action + ">" + Entitie.descricao + " <img src=" + Entitie.urlImagem + " width='20' height='20' /> <span id=" + Entitie.idCampo + "></span> </a>")
+                }
+                else {
+                    html.append("<a class='nav-link text-dark'  href=/" + Entitie.controller + "/" + Entitie.action + ">" + Entitie.descricao + "</a>")
+                }
+                $("#menuSite").append(html);
+
+            });
+        }
+    });
+}
+
 $(function () {
+
+    CarregarMenu();
+
     ObjetoVenda.CarregaProdutos();
     ObjetoVenda.CarregaQtdCarrinho();
+
+
+    $("#buscar").click(
+        function () {
+            var descricao = $("#descricao").val();
+            ObjetoVenda.CarregaProdutos(descricao);
+        }
+    );
+
 });

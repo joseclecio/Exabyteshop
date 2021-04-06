@@ -41,7 +41,7 @@ namespace Entities.Entities
         [Display(Name = "Telefone")]
         public string Telefone { get; set; }
 
-        [Display(Name = "EnumEstadoCompra")]
+        [Display(Name = "Estado")]
         public bool Estado { get; set; }
 
         [Display(Name = "Tipo")]

@@ -15,9 +15,9 @@ namespace Entities.Entities
         public int CompraUsuarioId { get; set; }
 
         [Display(Name = "Produto")]
-        [ForeignKey("Produto")]
+        [ForeignKey("TB_PRODUTO")]
         [Column(Order = 1)]
-        public int ProdutoId { get; set; }
+        public int IdProduto { get; set; }
         public virtual Produto Produto { get; set; }
 
         [Display(Name = "EnumEstadoCompra")]
@@ -27,9 +27,10 @@ namespace Entities.Entities
         public int Quantidade { get; set; }
 
 
+        [Display(Name = "Usuário")]
         [ForeignKey("Usuario")]
         [Column(Order = 1)]
-        public string Id { get; set; }
+        public string UserId { get; set; }
         public virtual Usuario Usuario { get; set; }
 
 
@@ -47,6 +48,13 @@ namespace Entities.Entities
 
         [NotMapped]
         public List<Produto> ListaProdutos { get; set; }
+
+
+        [Display(Name = "Compra")]
+        [ForeignKey("TB_COMPRA")]
+        [Column(Order = 1)]
+        public int IdCompra { get; set; }
+        public virtual Compra Compra { get; set; }
 
 
     }

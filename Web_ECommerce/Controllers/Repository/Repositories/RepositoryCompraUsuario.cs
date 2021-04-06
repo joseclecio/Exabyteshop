@@ -33,15 +33,23 @@ namespace Infrastructure.Repository.Repositories
                     compraUsuario.ListaProdutos = new List<Produto>();
 
                     var produtosCarrinhoUsuario = await (from p in banco.Produto
-                                                         join c in banco.CompraUsuario on p.ProdutoId equals c.ProdutoId
-                                                         where c.Id.Equals(userId) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho
+                                                         join c in banco.CompraUsuario on p.Id equals c.IdProduto
+                                                         where c.UserId.Equals(userId) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho
                                                          select c).AsNoTracking().ToListAsync();
 
                     produtosCarrinhoUsuario.ForEach(p =>
                     {
+                        compraUsuario.IdCompra = p.IdCompra;
                         p.EnumEstadoCompra = EnumEstadoCompra.Produto_Comprado;
                     });
 
+                    var compra = await banco.Compra.AsNoTracking().FirstOrDefaultAsync(c => c.Id == compraUsuario.IdCompra);
+                    if (compra != null)
+                    {
+                        compra.Estado = EnumEstadoCompra.Produto_Comprado;
+                    }
+
+                    banco.Update(compra);
                     banco.UpdateRange(produtosCarrinhoUsuario);
                     await banco.SaveChangesAsync();
 
@@ -55,7 +63,54 @@ namespace Infrastructure.Repository.Repositories
 
         }
 
-        public async Task<CompraUsuario> ProdutosCompradosPorEstado(string userId, EnumEstadoCompra estado)
+        public async Task<List<CompraUsuario>> MinhasComprasPorEstado(string userId, EnumEstadoCompra estado)
+        {
+            var retorno = new List<CompraUsuario>();
+
+            using (var banco = new ContextBase(_optionsbuilder))
+            {
+                var comprasUsuario = await banco.Compra
+                    .Where(co => co.Estado == estado && co.UserId.Equals(userId)).ToListAsync();
+
+                foreach (var item in comprasUsuario)
+                {
+                    var compraUsuario = new CompraUsuario();
+                    compraUsuario.ListaProdutos = new List<Produto>();
+
+                    var produtosCarrinhoUsuario = await (from p in banco.Produto
+                                                         join c in banco.CompraUsuario on p.Id equals c.IdProduto
+                                                         where c.UserId.Equals(userId) && c.EnumEstadoCompra == estado && c.IdCompra == item.Id
+                                                         select new Produto
+                                                         {
+                                                             Id = p.Id,
+                                                             Nome = p.Nome,
+                                                             Descricao = p.Descricao,
+                                                             Observacao = p.Observacao,
+                                                             Valor = p.Valor,
+                                                             QtdCompra = c.Quantidade,
+                                                             IdProdutoCarrinho = c.CompraUsuarioId,
+                                                             Url = p.Url,
+                                                             DataCompra = item.DataCompra
+                                                         }).AsNoTracking().ToListAsync();
+
+
+                    compraUsuario.ListaProdutos = produtosCarrinhoUsuario;
+                    compraUsuario.Usuario = await banco.ApplicationUser.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+                    compraUsuario.QuantidadeProdutos = produtosCarrinhoUsuario.Count();
+                    compraUsuario.EnderecoCompleto = string.Concat(compraUsuario.Usuario.Endereco, " - ", compraUsuario.Usuario.ComplementoEndereco, " - CEP: ", compraUsuario.Usuario.CEP);
+                    compraUsuario.ValorTotal = produtosCarrinhoUsuario.Sum(v => v.Valor);
+                    compraUsuario.EnumEstadoCompra = estado;
+                    compraUsuario.CompraUsuarioId = item.Id;
+
+                    retorno.Add(compraUsuario);
+                }
+
+                return retorno;
+
+            }
+        }
+
+        public async Task<CompraUsuario> ProdutosCompradosPorEstado(string userId, EnumEstadoCompra estado, int? idCompra = null)
         {
             using (var banco = new ContextBase(_optionsbuilder))
             {
@@ -63,11 +118,14 @@ namespace Infrastructure.Repository.Repositories
                 compraUsuario.ListaProdutos = new List<Produto>();
 
                 var produtosCarrinhoUsuario = await (from p in banco.Produto
-                                                     join c in banco.CompraUsuario on p.ProdutoId equals c.ProdutoId
-                                                     where c.Id.Equals(userId) && c.EnumEstadoCompra == estado
+                                                     join c in banco.CompraUsuario on p.Id equals c.IdProduto
+                                                     join co in banco.Compra on c.IdCompra equals co.Id
+                                                     where c.UserId.Equals(userId) && c.EnumEstadoCompra == estado &&
+                                                     co.UserId.Equals(userId) && co.Estado == estado
+                                                     && (idCompra == null || co.Id == idCompra)
                                                      select new Produto
                                                      {
-                                                         ProdutoId = p.ProdutoId,
+                                                         Id = p.Id,
                                                          Nome = p.Nome,
                                                          Descricao = p.Descricao,
                                                          Observacao = p.Observacao,
@@ -75,6 +133,7 @@ namespace Infrastructure.Repository.Repositories
                                                          QtdCompra = c.Quantidade,
                                                          IdProdutoCarrinho = c.CompraUsuarioId,
                                                          Url = p.Url,
+                                                         DataCompra = co.DataCompra
                                                      }).AsNoTracking().ToListAsync();
 
 
@@ -94,7 +153,7 @@ namespace Infrastructure.Repository.Repositories
         {
             using (var banco = new ContextBase(_optionsbuilder))
             {
-                return await banco.CompraUsuario.CountAsync(c => c.Id.Equals(userId) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho);
+                return await banco.CompraUsuario.CountAsync(c => c.UserId.Equals(userId) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho);
             }
         }
     }

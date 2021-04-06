@@ -1,29 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Entities.Entities;
+using HelpConfig;
+using Infrastructure.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Infrastructure.Configuration;
-using Infrastructure.Repository.Repositories;
-using Infrastructure.Repository.Generics;
-using Domain.Interfaces.Generics;
-using Domain.Interfaces.InterfaceProduct;
-using ApplicationApp.Interfaces;
-using ApplicationApp.OpenApp;
-using Domain.Interfaces.InterfaceServices;
-using Domain.Services;
-using Entities.Entities;
-using Domain.Interfaces.InterfaceCompraUsuario;
 
-namespace LojaVirtual
+namespace Exabyteshop
 {
     public class Startup
     {
@@ -40,24 +25,11 @@ namespace LojaVirtual
             services.AddDbContext<ContextBase>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<Usuario>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ContextBase>();
             services.AddControllersWithViews();
             services.AddRazorPages();
-
-            // INTERFACE E REPOSITORIO
-            services.AddSingleton(typeof(IGeneric<>), typeof(RepositoryGenerics<>));
-            services.AddSingleton<IProduct, RepositoryProduct>();
-            services.AddSingleton<ICompraUsuario, RepositoryCompraUsuario>();
-
-            // INTERFACE APLICAÇÃO
-            services.AddSingleton<InterfaceProductApp, AppProduct>();
-            services.AddSingleton<InterfaceCompraUsuarioApp, AppCompraUsuario>();
-
-            // SERVIÇO DOMINIO
-            services.AddSingleton<IServiceProduct, ServiceProduct>();
-            services.AddSingleton<IServiceCompraUsuario, ServiceCompraUsuario>();
-
+            HelpStartup.ConfigureSingleton(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

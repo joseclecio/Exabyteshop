@@ -37,18 +37,21 @@ namespace Infrastructure.Repository.Repositories
             using (var banco = new ContextBase(_optionsbuilder))
             {
                 var produtosCarrinhoUsuario = await (from p in banco.Produto
-                                                     join c in banco.CompraUsuario on p.ProdutoId equals c.ProdutoId
-                                                     where c.Id.Equals(userId) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho
+                                                     join c in banco.CompraUsuario on p.Id equals c.IdProduto
+                                                     join co in banco.Compra on c.IdCompra equals co.Id
+                                                     where c.UserId.Equals(userId)
+                                                     && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho
                                                      select new Produto
                                                      {
-                                                         ProdutoId = p.ProdutoId,
+                                                         Id = p.Id,
                                                          Nome = p.Nome,
                                                          Descricao = p.Descricao,
                                                          Observacao = p.Observacao,
                                                          Valor = p.Valor,
                                                          QtdCompra = c.Quantidade,
-                                                         IdProdutoCarrinho = Convert.ToInt32(c.Id),
-                                                         Url = p.Url
+                                                         IdProdutoCarrinho = c.CompraUsuarioId,
+                                                         Url = p.Url,
+                                                         DataCompra = co.DataCompra
 
                                                      }).AsNoTracking().ToListAsync();
 
@@ -62,11 +65,11 @@ namespace Infrastructure.Repository.Repositories
             using (var banco = new ContextBase(_optionsbuilder))
             {
                 var produtosCarrinhoUsuario = await (from p in banco.Produto
-                                                     join c in banco.CompraUsuario on p.ProdutoId equals c.ProdutoId
+                                                     join c in banco.CompraUsuario on p.Id equals c.IdProduto
                                                      where c.CompraUsuarioId.Equals(idProdutoCarrinho) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Carrinho
                                                      select new Produto
                                                      {
-                                                         ProdutoId = p.ProdutoId,
+                                                         Id = p.Id,
                                                          Nome = p.Nome,
                                                          Descricao = p.Descricao,
                                                          Observacao = p.Observacao,
@@ -86,10 +89,22 @@ namespace Infrastructure.Repository.Repositories
         {
             using (var banco = new ContextBase(_optionsbuilder))
             {
-                return await banco.Produto.Where(p => p.Id == userId).AsNoTracking().ToListAsync();
+                return await banco.Produto.Where(p => p.UserId == userId).AsNoTracking().ToListAsync();
             }
         }
 
+        public async Task<List<Produto>> ListarProdutosVendidos(string userId, string filtro)
+        {
+            using (var banco = new ContextBase(_optionsbuilder))
+            {
+                var produtosVendidos = await (from p in banco.Produto
+                                              join c in banco.CompraUsuario on p.Id equals c.IdProduto
+                                              where p.UserId.Equals(userId) && c.EnumEstadoCompra == EnumEstadoCompra.Produto_Comprado
+                                              && (string.IsNullOrWhiteSpace(filtro) || p.Descricao.Contains(filtro))
+                                              select p).AsNoTracking().ToListAsync();
 
+                return produtosVendidos;
+            }
+        }
     }
 }

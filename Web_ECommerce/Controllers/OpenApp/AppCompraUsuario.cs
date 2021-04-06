@@ -2,11 +2,7 @@
 using Domain.Interfaces.InterfaceCompraUsuario;
 using Domain.Interfaces.InterfaceServices;
 using Entities.Entities;
-using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ApplicationApp.OpenApp
@@ -29,9 +25,9 @@ namespace ApplicationApp.OpenApp
             return await _IServiceCompraUsuario.CarrinhoCompras(userId);
         }
 
-        public async Task<CompraUsuario> ProdutosComprados(string userId)
+        public async Task<CompraUsuario> ProdutosComprados(string userId, int? idCompra = null)
         {
-            return await _IServiceCompraUsuario.ProdutosComprados(userId);
+            return await _IServiceCompraUsuario.ProdutosComprados(userId, idCompra);
         }
 
         public async Task<bool> ConfirmaCompraCarrinhoUsuario(string userId)
@@ -75,6 +71,14 @@ namespace ApplicationApp.OpenApp
             await _ICompraUsuario.Update(Objeto);
         }
 
+        public async Task<List<CompraUsuario>> MinhasCompras(string userId)
+        {
+            return await _IServiceCompraUsuario.MinhasCompras(userId);
+        }
 
+        public async Task AdicionaProdutoCarrinho(string userId, CompraUsuario compraUsuario)
+        {
+            await _IServiceCompraUsuario.AdicionaProdutoCarrinho(userId, compraUsuario);
+        }
     }
 }

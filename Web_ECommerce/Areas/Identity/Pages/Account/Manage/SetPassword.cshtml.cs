@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace LojaVirtual.Areas.Identity.Pages.Account.Manage
+namespace Exabyteshop.Areas.Identity.Pages.Account.Manage
 {
     public class SetPasswordModel : PageModel
     {

@@ -8,9 +8,9 @@ using Entities.Entities.Enums;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using LojaVirtual.Models;
+using Exabyteshop.Models;
 
-namespace LojaVirtual.Controllers
+namespace Exabyteshop.Controllers
 {
     public class CompraUsuarioController : HelpQrCode
     {
@@ -39,7 +39,7 @@ namespace LojaVirtual.Controllers
         public async Task<IActionResult> MinhasCompras(bool mensagem = false)
         {
             var usuario = await _userManager.GetUserAsync(User);
-            var compraUsuario = await _InterfaceCompraUsuarioApp.ProdutosComprados(usuario.Id);
+            var compraUsuario = await _InterfaceCompraUsuarioApp.MinhasCompras(usuario.Id);
 
             if (mensagem)
             {
@@ -65,11 +65,11 @@ namespace LojaVirtual.Controllers
                 return RedirectToAction("FinalizarCompra");
         }
 
-        public async Task<IActionResult> Imprimir()
+        public async Task<IActionResult> Imprimir(int id)
         {
             var usuario = await _userManager.GetUserAsync(User);
 
-            var compraUsuario = await _InterfaceCompraUsuarioApp.ProdutosComprados(usuario.Id);
+            var compraUsuario = await _InterfaceCompraUsuarioApp.ProdutosComprados(usuario.Id, id);
 
             return await Download(compraUsuario, _environment);
 
@@ -83,12 +83,12 @@ namespace LojaVirtual.Controllers
 
             if (usuario != null)
             {
-                await _InterfaceCompraUsuarioApp.Add(new CompraUsuario
+                await _InterfaceCompraUsuarioApp.AdicionaProdutoCarrinho(usuario.Id, new CompraUsuario
                 {
-                    ProdutoId = Convert.ToInt32(id),
+                    IdProduto = Convert.ToInt32(id),
                     Quantidade = Convert.ToInt32(qtd),
                     EnumEstadoCompra = EnumEstadoCompra.Produto_Carrinho,
-                    Id = usuario.Id
+                    UserId = usuario.Id
                 });
                 return Json(new { sucesso = true });
             }

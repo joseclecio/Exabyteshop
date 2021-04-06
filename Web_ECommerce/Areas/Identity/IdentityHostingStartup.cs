@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: HostingStartup(typeof(LojaVirtual.Areas.Identity.IdentityHostingStartup))]
-namespace LojaVirtual.Areas.Identity
+[assembly: HostingStartup(typeof(Exabyteshop.Areas.Identity.IdentityHostingStartup))]
+namespace Exabyteshop.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {
